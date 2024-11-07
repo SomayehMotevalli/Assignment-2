@@ -17,13 +17,14 @@ class BaseRegressor():
         self.max_iter = max_iter
         self.batch_size = batch_size
         
+        
         # This will need to be adjusted as you add or remove features
         self.num_feats = num_feats
         
         # Defining list for storing Loss History: Makes it so you can visualize your loss descending, ascending, or not moving
         self.loss_history_train = []
         self.loss_history_val = []
-        
+        self.gradient_history= []
     def calculate_gradient(self, X, y):
         # Kept empty as when you are inheriting, you overwrite this with LogisticRegression's calculate_gradient method
         pass
@@ -76,12 +77,16 @@ class BaseRegressor():
                 
                 # Adding current loss to loss history record
                 self.loss_history_train.append(loss_train)
+            
                 
                 # Storing previous weights and bias
                 prev_W = self.W
                 # Calculating gradient of loss function with respect to each parameter
                 grad = self.calculate_gradient(X_train, y_train)
+                # Storing calculated gradient in a history list
+                self.gradient_history.append(grad)
                 
+
                 # Updating parameters
                 new_W = prev_W - self.lr * grad 
                 self.W = new_W

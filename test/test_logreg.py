@@ -36,48 +36,25 @@ def test_updates():
     log_model.plot_loss_history()
             
     """
+    # Check that your gradient is being calculated correctly
+
     log_model = logreg.LogisticRegression(num_feats=6, max_iter=10, tol=0.01, learning_rate=0.01, batch_size=12)
     log_model.train_model(X_train, y_train, X_val, y_val)
-	
-	
+    for grad in log_model.gradient_history:
+     assert np.linalg.norm(grad) <10
+     assert np.linalg.norm(grad) >0.001
+     assert 0.001 <np.linalg.norm(grad)< 10
+     assert log_model.loss_history_val[0] > log_model.loss_history_val[-1]
+     # assert log_model.loss_history_val [-1] < 0.5 # the final element of my validation loss is not less than 0.5
+     
 
-    
-	
-
-
-
-# import pytest
-# import numpy as np
-# from regression import (logreg, utils)
-# print(logreg.__file__)
-
-def test_updates():
-	# Check that your gradient is being calculated correctly
-	# Define parameters num_feats and num_samples for testing. 
-	num_feats= 2
-	num_samples= 3
-	X_test = np.array([
-		[1,2], 
-		[2,1], 
-		[1,1]
-		])
-	#y_test = np.array([1,0,1])
-	#W = np.random.randn(num_feats=2 + 1)
-	#model = LogisticRegression(num_feats=2, max_iter=10, tol=0.01, learning_rate=0.00001, batch_size=3)
-
-	#gradient = model.calculate_gradient(X_test, y_test)
-	#updated_W = W - learning_rate=10^-5 * gradient
-	#train_model= (X_test, y_test)
-	#assert gradient < 100
-
-	assert 1 + 1 == 2 
-
-
-	# What is a reasonable gradient? Is it exploding? Is it vanishing? 
-	# lower the learning rate, exploding gradient, a reasonable gradient is when lr is 
-	# Check that your loss function is correct and that 
-	# you have reasonable losses at the end of training
-	# What is a reasonable loss?
+# What is a reasonable gradient? it is between 0.001 and 10.
+    0.001 <np.linalg.norm(grad)< 10
+#  Is it exploding? It is not exploding (> 0.001).
+# Is it vanishing? It is not vanishing (<10).
+# Check that your loss function is correct and that 
+# you have reasonable losses at the end of training
+# What is a reasonable loss? 0.6676
 
 
 def test_predict():
