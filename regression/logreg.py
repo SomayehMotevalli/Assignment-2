@@ -4,7 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 class BaseRegressor():
-    def __init__(self, num_feats, learning_rate=0.1, tol=0.001, max_iter=100, batch_size=12):
+    def __init__(self, num_feats, learning_rate=0.01, tol=0.001, max_iter=100, batch_size=12):
         """
         No need to modify
         """
@@ -135,7 +135,10 @@ class LogisticRegression(BaseRegressor):
         # This python built-in function will allow you to access methods from the class you are inheriting from!
         # This is this class will be able to use train_model and plot_loss_history! :) 
         super().__init__(num_feats, learning_rate, tol, max_iter, batch_size)
-        
+     # sigmoid function transforms input values to a range between 0 and 1.  
+    def sigmoid (self, XW):
+            return 1/(1 + np.exp(-XW))  
+    
     def calculate_gradient(self, X, y) -> np.ndarray:
         """
         TODO: Write function to calculate gradient of the
@@ -150,9 +153,15 @@ class LogisticRegression(BaseRegressor):
         Returns: 
             gradients for a given loss function type np.ndarray (n-dimensional array)
         """
+        n_samples = X.shape[0]
+
+        y_pred = self.sigmoid(np.dot(X, self.W))
+
+        gradient_W = np.dot(X.T, (y_pred-y)) / n_samples
+
+        return gradient_W
         
-        
-        pass
+      
     
     def loss_function(self, X, y) -> float:
         """
@@ -168,7 +177,14 @@ class LogisticRegression(BaseRegressor):
         Returns: 
             average loss 
         """
-        pass
+    # sigmoid (logistic) function converts linear model to S-shape model.
+        y_pred = self.sigmoid(np.dot(X, self.W))
+    # .clip() limits the values in y_pred.
+        y_pred = np.clip(y_pred, 1e-15, 1 - 1e-15)
+        loss = -np.mean(y * np.log(y_pred) + (1 - y) * np.log(1 - y_pred))
+        return loss
+
+
     
     def make_prediction(self, X) -> np.array:
         """
@@ -183,7 +199,12 @@ class LogisticRegression(BaseRegressor):
             y_pred for given X
         """
 
-        pass
+        linear_model =  np.dot(self.W, X.T) 
+        y_pred = self.sigmoid(linear_model)
+    # .astype(int) method is used to convert a column to the integer data type.
+        y_pred = (y_pred >= 0.5).astype(int)
+
+        return y_pred
 
 
 

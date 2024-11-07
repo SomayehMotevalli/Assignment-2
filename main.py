@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 from regression import (logreg, utils)
 from sklearn.preprocessing import StandardScaler
 
@@ -15,7 +16,7 @@ def main():
     X_train = sc.fit_transform(X_train)
     X_val = sc.transform (X_val)
     
-    #print(X_train.shape, X_val.shape, y_val.shape, y_train.shape)
+    print(X_train.shape, X_val.shape, y_val.shape, y_train.shape)
 
 
     """
@@ -27,6 +28,14 @@ def main():
     log_model.plot_loss_history()
             
     """
+    log_model = logreg.LogisticRegression(num_feats=6, max_iter=10, tol=0.01, learning_rate=0.01, batch_size=12)
+    log_model.train_model(X_train, y_train, X_val, y_val)
+    log_model.plot_loss_history()
+    plt.show()
+    
+
 
 if __name__ == "__main__":
     main()
+
+
